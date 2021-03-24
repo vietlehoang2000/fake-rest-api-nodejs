@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+      crossorigin="anonymous"
+    />
+
+    <title>Danh sách học viên</title>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1 class="text-center mt-4">Danh sách học viên</h1>
+
+      <p>
+        <a href="create.html" class="btn btn-success"
+          ><i class="fa fa-plus-circle"></i> Thêm học viên</a
+        >
+      </p>
+
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th>Họ tên</th>
+              <th>Năm sinh</th>
+              <th>Email</th>
+              <th>Số điện thoại</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody id="content">
+            <tr>
+              <td colspan="5" class="text-center">
+                <div class="spinner-border" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- <button
+        type="button"
+        class="btn btn-primary"
+        data-toggle="modal"
+        data-target="#exampleModal"
+      >
+        Launch demo modal
+      </button> -->
+
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Xác nhận xóa</h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">Bạn có chắc muốn xóa</div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Không
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                data-dismiss="modal"
+                onclick="checkDelete()"
+              >
+                Có
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal 2 -->
+      <div
+        class="modal fade"
+        id="exampleModal2"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Xác nhận xóa</h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">Bạn có chắc muốn xóa hết các users</div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Không
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                data-dismiss="modal"
+                onclick="deleteMultipleUsers()"
+              >
+                Có
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        id="target"
+        class="btn btn-warning"
+        data-toggle="modal"
+        data-target="#exampleModal2"
+        onclick="deleteMultiples()"
+      >
+        Delete
+      </button>
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      function loadDoc() {
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            const users = JSON.parse(this.responseText);
+            let content = ``;
+
+            for (let user of users) {
+              content += `<tr>
+                            <td>${user.name}</td>
+                            <td>${user.birthYear}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>`;
+            }
+
+            document.getElementById("content").innerHTML = content;
+          }
+        };
+
+        xhttp.open("GET", "http://localhost:3000/users", true);
+
+        xhttp.send();
+      }
+
+      function loadDocJQuery() {
+        $.ajax({
+          url: "http://localhost:3000/users",
+          method: "GET",
+        }).done(function (users) {
+          let content = ``;
+
+          for (let user of users) {
+            content += `<tr>
+                            <td>${user.name}</td>
+                            <td>${user.birthday}</td>
+                            <td>${user.email}</td>
+                            <td>${user.phone}</td>
+                            <td><button type="button" class="btn btn-primary" style="margin-right:5px"><a href="edit.html?${user.id}" id="editUser" style="color: white">edit</a></button><button id="deleteUser"  type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" onclick="deleteUser(${user.id})" style="margin-right:5px">delete</button><input onclick="showdiv()" type="checkbox" class="btn-check" id="btn-check ${user.id}" autocomplete="off"></td>
+                        </tr>`;
+          }
+          $("#content").html(content);
+        });
+      }
+
+      //   loadDoc();
+      loadDocJQuery();
+
+      //delete one user
+
+      var saveDeleteUser;
+
+      function deleteUser(deleteUser) {
+        saveDeleteUser = deleteUser;
+        if (check % 2 == 0) {
+          $.ajax({
+            url: "http://localhost:3000/users/" + deleteUser,
+            type: "DELETE",
+          });
+          loadDocJQuery();
+        }
+      }
+
+      var check = 1;
+
+      function checkDelete() {
+        check++;
+        deleteUser(saveDeleteUser);
+        check = 1;
+      }
+
+      //delete multiple users
+
+      $("#target").hide();
+      function showdiv() {
+        $("#target").show();
+        if ($("input:checkbox:checked").length == 0) $("#target").hide();
+      }
+      var checkedBox = [];
+      function deleteMultiples() {
+        // var checkboxes = $('input:checkbox:checked').length;
+        // alert(checkboxes);
+
+        $("input:checkbox").each(function () {
+          var $this = $(this);
+          var str = $this.attr("id");
+          var ret = str.split(" ");
+          var str1 = ret[1];
+          if ($this.is(":checked")) {
+            checkedBox.push(str1);
+          }
+        });
+        console.log(checkedBox);
+      }
+
+      function deleteMultipleUsers() {
+        for (i = 0; i < checkedBox.length; i++) {
+          $.ajax({
+            url: "http://localhost:3000/users/" + checkedBox[i],
+            type: "DELETE",
+          });
+        }
+        loadDocJQuery();
+      }
+    </script>
+  </body>
+</html>
