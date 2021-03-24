@@ -39,12 +39,13 @@ function loadDocJQuery() {
     let content = ``;
 
     for (let user of users) {
-      content += `<tr>
-                            <td>${user.name}</td>
+        content += `<tr>
+                            <td><input onclick="showdiv()" type="checkbox" class="btn-check" id="btn-check ${user.id}" autocomplete="off">  </td>
+                            <td> ${user.name}</td>
                             <td>${user.birthday}</td>
                             <td>${user.email}</td>
                             <td>${user.phone}</td>
-                            <td><button type="button" class="btn btn-primary" style="margin-right:5px"><a href="edit.html?${user.id}" id="editUser" style="color: white">edit</a></button><button id="deleteUser"  type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" onclick="deleteUser(${user.id})" style="margin-right:5px">delete</button><input onclick="showdiv()" type="checkbox" class="btn-check" id="btn-check ${user.id}" autocomplete="off"></td>
+                            <td style="display:flex;justify-content:space-between"><button style="margin-right:5px; border:unset; background-color:unset;"><a href="edit.html?${user.id}" id="editUser" style="color: #01A4B6"><i class="far fa-edit"></i> chỉnh sửa</a></button> <div class="style1" style="border: 1px solid #8c8b8b;width:1px"></div> <button id="deleteUser"  data-toggle="modal" data-target="#exampleModal" onclick="deleteUser(${user.id})" style="margin-right:5px; border:unset; background-color:unset;color:red;"><i class="fas fa-trash-alt" style="margin-right:3px"></i>  Xóa</button></td>
                         </tr>`;
     }
     $("#content").html(content);

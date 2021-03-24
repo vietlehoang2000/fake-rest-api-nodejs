@@ -18,7 +18,7 @@
       integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
       crossorigin="anonymous"
     />
-
+    <link href="fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet">
     <title>Danh sách học viên</title>
   </head>
 
@@ -26,16 +26,29 @@
     <div class="container">
       <h1 class="text-center mt-4">Danh sách học viên</h1>
 
-      <p>
+      <p style="display: flex;justify-content: space-between;">
         <a href="create.html" class="btn btn-success"
           ><i class="fa fa-plus-circle"></i> Thêm học viên</a
         >
+        <button
+        type="button"
+        id="target"
+        class="btn btn-danger"
+        data-toggle="modal"
+        data-target="#exampleModal2"
+        onclick="deleteMultiples()"
+      >
+      <i class="fas fa-trash-alt"></i>
+        Xóa
+      </button>
       </p>
+      
 
       <div class="table-responsive">
         <table class="table table-striped table-hover">
           <thead class="thead-dark">
             <tr>
+              <th></th>
               <th>Họ tên</th>
               <th>Năm sinh</th>
               <th>Email</th>
@@ -153,16 +166,6 @@
         </div>
       </div>
 
-      <button
-        type="button"
-        id="target"
-        class="btn btn-warning"
-        data-toggle="modal"
-        data-target="#exampleModal2"
-        onclick="deleteMultiples()"
-      >
-        Delete
-      </button>
     </div>
 
     <script
