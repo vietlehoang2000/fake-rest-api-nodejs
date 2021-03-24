@@ -204,14 +204,14 @@
           }
         };
 
-        xhttp.open("GET", "http://localhost:3000/users", true);
+        xhttp.open("GET", "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users", true);
 
         xhttp.send();
       }
 
       function loadDocJQuery() {
         $.ajax({
-          url: "http://localhost:3000/users",
+          url: "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users",
           method: "GET",
         }).done(function (users) {
           let content = ``;
@@ -240,7 +240,7 @@
         saveDeleteUser = deleteUser;
         if (check % 2 == 0) {
           $.ajax({
-            url: "http://localhost:3000/users/" + deleteUser,
+            url: "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users/" + deleteUser,
             type: "DELETE",
           });
           loadDocJQuery();
@@ -282,7 +282,7 @@
       function deleteMultipleUsers() {
         for (i = 0; i < checkedBox.length; i++) {
           $.ajax({
-            url: "http://localhost:3000/users/" + checkedBox[i],
+            url: "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users/" + checkedBox[i],
             type: "DELETE",
           });
         }

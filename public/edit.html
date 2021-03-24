@@ -107,7 +107,7 @@
       var sortedUrl = url.substring("32", url.length);
       function loadUser() {
         $.ajax({
-          url: "http://localhost:3000/users/" + sortedUrl,
+          url: "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users/" + sortedUrl,
           method: "GET",
         }).done(function (users) {
           $("#name").val(users.name);
@@ -126,7 +126,7 @@
           phone: $("#phone").val(),
         };
         $.ajax({
-          url: "http://localhost:3000/users/" + sortedUrl,
+          url: "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users/" + sortedUrl,
           type: "PUT",
           data: data,
           success: function (data) {
