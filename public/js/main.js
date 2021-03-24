@@ -140,7 +140,8 @@ function createUser() {
 //js edit
 
  var url = window.location.href;
- var sortedUrl = url.substring("32", url.length);
+var sortedUrl = url.substring("61", url.length);
+ 
  function loadUser() {
    $.ajax({
      url:
