@@ -31,15 +31,39 @@ function loadDoc() {
   xhttp.send();
 }
 
-function loadDocJQuery() {
+
+function checkPage() {
   $.ajax({
     url: "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users",
+    method: "GET",
+  }).done(function (users) {
+    let pageContent = ``;
+    for (i = 1; i <= Math.ceil(users.length / 5); i++) {
+      if (i <= 5){
+        pageContent += `<li class="page-item"><a class="page-link ${i}"  onclick="changePage(${i})">${i}</a></li>`;
+      }
+      if (i > 5)
+      {
+         pageContent += `<li class="page-item" style="display:none;" ><a class="page-link ${i}"  onclick="changePage(${i})" >${i}</a></li>`;
+        }
+    } 
+    $("#pageNumber").html(pageContent);
+  });
+}
+
+
+checkPage();
+
+function loadDocJQuery(page) {
+  $.ajax({
+    url:
+      `https://quan-ly-sinh-vien-techmaster.herokuapp.com/users?_page=${page}&_limit=5&_sort=id&_order=desc`,
     method: "GET",
   }).done(function (users) {
     let content = ``;
 
     for (let user of users) {
-        content += `<tr>
+      content += `<tr>
                             <td><input onclick="showdiv()" type="checkbox" class="btn-check" id="btn-check ${user.id}" autocomplete="off">  </td>
                             <td> ${user.name}</td>
                             <td>${user.birthday}</td>
@@ -52,8 +76,15 @@ function loadDocJQuery() {
   });
 }
 
+
 //   loadDoc();
-loadDocJQuery();
+loadDocJQuery(1);
+
+
+// load specific Page
+function changePage(pageNumb) {
+  loadDocJQuery(pageNumb);
+}
 
 //delete one user
 
@@ -68,7 +99,7 @@ function deleteUser(deleteUser) {
         deleteUser,
       type: "DELETE",
     });
-    loadDocJQuery();
+    loadDocJQuery(1);
   }
 }
 
@@ -113,9 +144,8 @@ function deleteMultipleUsers() {
       type: "DELETE",
     });
   }
-  loadDocJQuery();
+  loadDocJQuery(1);
 }
-
 
 //js create page
 function createUser() {
@@ -139,37 +169,37 @@ function createUser() {
 
 //js edit
 
- var url = window.location.href;
+var url = window.location.href;
 var sortedUrl = url.substring("61", url.length);
- 
- function loadUser() {
-   $.ajax({
-     url:
-       "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users/" + sortedUrl,
-     method: "GET",
-   }).done(function (users) {
-     $("#name").val(users.name);
-     $("#birthYear").val(users.birthday);
-     $("#email").val(users.email);
-     $("#phone").val(users.phone);
-   });
- }
- loadUser();
 
- function updateUser() {
-   let data = {
-     name: $("#name").val(),
-     birthday: $("#birthYear").val(),
-     email: $("#email").val(),
-     phone: $("#phone").val(),
-   };
-   $.ajax({
-     url:
-       "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users/" + sortedUrl,
-     type: "PUT",
-     data: data,
-     success: function (data) {
-       alert("Cập nhật thành công");
-     },
-   });
- }
+function loadUser() {
+  $.ajax({
+    url:
+      "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users/" + sortedUrl,
+    method: "GET",
+  }).done(function (users) {
+    $("#name").val(users.name);
+    $("#birthYear").val(users.birthday);
+    $("#email").val(users.email);
+    $("#phone").val(users.phone);
+  });
+}
+loadUser();
+
+function updateUser() {
+  let data = {
+    name: $("#name").val(),
+    birthday: $("#birthYear").val(),
+    email: $("#email").val(),
+    phone: $("#phone").val(),
+  };
+  $.ajax({
+    url:
+      "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users/" + sortedUrl,
+    type: "PUT",
+    data: data,
+    success: function (data) {
+      alert("Cập nhật thành công");
+    },
+  });
+}
