@@ -44,7 +44,6 @@ function checkPage() {
         $("#choosePageNumb").val(
           Math.max(Math.min(value, Math.ceil(users.length / 5)), 1)
         );
-        console.log(value);
       }
     });
     let pageContent = ``;
@@ -80,7 +79,7 @@ function loadDocJQuery(page) {
       content += `<tr>
                             <td><input onclick="showdiv()" type="checkbox" class="btn-check" id="btn-check ${user.id}" autocomplete="off">  </td>
                             <td> ${user.name}</td>
-                            <td>${user.birthday}</td>
+                            <td>${user.birthYear}</td>
                             <td>${user.email}</td>
                             <td>${user.phone}</td>
                             <td style="display:flex;justify-content:space-between"><button style="margin-right:5px; border:unset; background-color:unset;"><a href="edit.html?${user.id}" id="editUser" style="color: #01A4B6"><i class="far fa-edit"></i> chỉnh sửa</a></button> <div class="style1" style="border: 1px solid #8c8b8b;width:1px"></div> <button id="deleteUser"  data-toggle="modal" data-target="#exampleModal" onclick="deleteUser(${user.id})" style="margin-right:5px; border:unset; background-color:unset;color:red;"><i class="fas fa-trash-alt" style="margin-right:3px"></i>  Xóa</button></td>
@@ -162,6 +161,32 @@ function prevPage() {
   }
   loadDocJQuery(currentPage);
 }
+
+//search user
+
+function search() {
+  let searchValue = $("#searchForm").val();
+  if (searchValue != "") {
+    $.ajax({
+      url: `https://quan-ly-sinh-vien-techmaster.herokuapp.com/users?q=${searchValue}`,
+      method: "GET",
+    }).done(function (users) {
+      let content = ``;
+      for (let user of users) {
+        content += `<tr>
+                            <td><input onclick="showdiv()" type="checkbox" class="btn-check" id="btn-check ${user.id}" autocomplete="off">  </td>
+                            <td> ${user.name}</td>
+                            <td>${user.birthday}</td>
+                            <td>${user.email}</td>
+                            <td>${user.phone}</td>
+                            <td style="display:flex;justify-content:space-between"><button style="margin-right:5px; border:unset; background-color:unset;"><a href="edit.html?${user.id}" id="editUser" style="color: #01A4B6"><i class="far fa-edit"></i> chỉnh sửa</a></button> <div class="style1" style="border: 1px solid #8c8b8b;width:1px"></div> <button id="deleteUser"  data-toggle="modal" data-target="#exampleModal" onclick="deleteUser(${user.id})" style="margin-right:5px; border:unset; background-color:unset;color:red;"><i class="fas fa-trash-alt" style="margin-right:3px"></i>  Xóa</button></td>
+                        </tr>`;
+      }
+      $("#content").html(content);
+    });
+  }
+}
+
 //delete one user
 
 var saveDeleteUser;
@@ -247,8 +272,7 @@ function createUser() {
   })
 
     .done(function () {
-      alert("them moi user thanh cong!");
-      location.href = "index.html";
+      // location.href = "index.html";
     })
 
     .fail(function (err) {
@@ -257,11 +281,24 @@ function createUser() {
     });
 }
 
+//return index
+function returnIndex() {
+  location.href = "index.html";
+}
+
+//reset Create
+function resetCreate() {
+  $("#name").val("");
+  $("#birthYear").val("");
+  $("#email").val("");
+  $("#phone").val("");
+}
+
 //js edit
 
 var url = window.location.href;
-var sortedUrl = url.substring("61", url.length);
-
+// var sortedUrl = url.substring("61", url.length);
+var sortedUrl = url.substring("32", url.length);
 function loadUser() {
   $.ajax({
     url:
@@ -288,8 +325,6 @@ function updateUser() {
       "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users/" + sortedUrl,
     type: "PUT",
     data: data,
-    success: function (data) {
-      alert("Cập nhật thành công");
-    },
+    success: function (data) {},
   });
 }

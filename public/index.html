@@ -25,7 +25,16 @@
   <body>
     <div class="container">
       <h1 class="text-center mt-4">Danh sách học viên</h1>
-
+      <div class="search-bar" style="margin-bottom:30px">
+        <div class="input-group">
+          <div class="form-outline">
+            <input type="search" id="searchForm" class="form-control" placeholder="Tìm kiếm"/>
+          </div>
+          <button type="button" class="btn btn-primary" onclick="search()">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
       <p style="display: flex; justify-content: space-between">
         <a href="create.html" class="btn btn-success"
           ><i class="fa fa-plus-circle"></i> Thêm học viên</a
@@ -82,9 +91,9 @@
       >
         <ul class="pagination">
           <li class="page-item" onclick="prevPage()">
-            <a class="page-link prev" href="#" aria-label="Previous" >
+            <a class="page-link prev" href="#" aria-label="Previous">
               <span aria-hidden="true">&laquo;</span>
-              <span class="sr-only" >Previous</span>
+              <span class="sr-only">Previous</span>
             </a>
           </li>
 
@@ -95,7 +104,7 @@
           <li class="page-item" onclick="nextPage()">
             <a class="page-link next" href="#" aria-label="Next">
               <span aria-hidden="true">&raquo;</span>
-              <span class="sr-only" >Next</span>
+              <span class="sr-only">Next</span>
             </a>
           </li>
         </ul>
@@ -217,7 +226,7 @@
               </button>
             </div>
             <div class="modal-body" style="text-align: center">
-              <input type="number" id="choosePageNumb" value="0"/>
+              <input type="number" id="choosePageNumb" value="0" />
             </div>
             <div class="modal-footer">
               <button
