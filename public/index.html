@@ -25,14 +25,12 @@
   <body>
     <div class="container">
       <h1 class="text-center mt-4">Danh sách học viên</h1>
-      
 
-      
       <p style="display: flex; justify-content: space-between">
         <a href="create.html" class="btn btn-success"
           ><i class="fa fa-plus-circle"></i> Thêm học viên</a
         >
-        
+
         <button
           type="button"
           id="target"
@@ -50,7 +48,14 @@
         <table class="table table-striped table-hover">
           <thead class="thead-dark">
             <tr>
-              <th></th>
+              <th>
+                <input
+                  type="checkbox"
+                  class="btn-check check-all"
+                  id="btn-check"
+                  autocomplete="off"
+                />
+              </th>
               <th>Họ tên</th>
               <th>Năm sinh</th>
               <th>Email</th>
@@ -71,29 +76,31 @@
         </table>
       </div>
 
-      <nav aria-label="Page navigation example" style="display: flex;justify-content: center;">
+      <nav
+        aria-label="Page navigation example"
+        style="display: flex; justify-content: center"
+      >
         <ul class="pagination">
-          <li class="page-item">
-            <a class="page-link" href="#" aria-label="Previous">
+          <li class="page-item" onclick="prevPage()">
+            <a class="page-link prev" href="#" aria-label="Previous" >
               <span aria-hidden="true">&laquo;</span>
-              <span class="sr-only">Previous</span>
+              <span class="sr-only" >Previous</span>
             </a>
           </li>
 
-          <div id="pageNumber" style="display: flex;">
-          <!-- <li class="page-item"><a class="page-link 1" href="#">1</a></li>
-          <li class="page-item"><a class="page-link 2" href="#">2</a></li>
-          <li class="page-item"><a class="page-link 3" href="#">3</a></li> -->
+          <div id="pageNumber" style="display: flex">
+            <!-- <li class="page-item"><a class="page-link 1" href="#">1</a></li>
+          <li class="page-item"><a class="page-link 2" href="#">2</a></li> -->
           </div>
-          <li class="page-item">
-            <a class="page-link" href="#" aria-label="Next">
+          <li class="page-item" onclick="nextPage()">
+            <a class="page-link next" href="#" aria-label="Next">
               <span aria-hidden="true">&raquo;</span>
-              <span class="sr-only">Next</span>
+              <span class="sr-only" >Next</span>
             </a>
           </li>
         </ul>
       </nav>
-      <!-- Modal -->
+      <!-- Modal Delete -->
       <div
         class="modal fade"
         id="exampleModal"
@@ -137,7 +144,7 @@
         </div>
       </div>
 
-      <!-- Modal 2 -->
+      <!-- Modal Delete Multiple -->
       <div
         class="modal fade"
         id="exampleModal2"
@@ -175,6 +182,58 @@
                 onclick="deleteMultipleUsers()"
               >
                 Có
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal choose page -->
+      <div
+        class="modal fade"
+        id="exampleModal3"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5
+                class="modal-title"
+                id="exampleModalLabel"
+                style="text-align: center"
+              >
+                Chọn trang
+              </h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" style="text-align: center">
+              <input type="number" id="choosePageNumb" value="0"/>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Hủy
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                data-dismiss="modal"
+                onclick="choosePage()"
+              >
+                Tới
               </button>
             </div>
           </div>

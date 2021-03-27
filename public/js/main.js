@@ -30,38 +30,52 @@ function loadDoc() {
 
   xhttp.send();
 }
-
+var totalUser = "";
 
 function checkPage() {
   $.ajax({
     url: "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users",
     method: "GET",
   }).done(function (users) {
+    totalUser = users.length;
+    $("input").on("input", function () {
+      var value = $("#choosePageNumb").val();
+      if (value !== "" && value.indexOf(".") === -1) {
+        $("#choosePageNumb").val(
+          Math.max(Math.min(value, Math.ceil(users.length / 5)), 1)
+        );
+        console.log(value);
+      }
+    });
     let pageContent = ``;
     for (i = 1; i <= Math.ceil(users.length / 5); i++) {
-      if (i <= 5){
-        pageContent += `<li class="page-item"><a class="page-link ${i}"  onclick="changePage(${i})">${i}</a></li>`;
-      }
-      if (i > 5)
-      {
-         pageContent += `<li class="page-item" style="display:none;" ><a class="page-link ${i}"  onclick="changePage(${i})" >${i}</a></li>`;
+      if (i <= 5) {
+        if (i == 1) {
+          pageContent += `<li class="page-item"><a class="page-link ${i}"  onclick="changePage(${i})" style="background-color:rgba(0, 0, 0, 0.05)">${i}</a></li>`;
         }
-    } 
+        if (i != 1)
+          pageContent += `<li class="page-item"><a class="page-link ${i}"  onclick="changePage(${i})">${i}</a></li>`;
+      }
+      if (i > 5) {
+        pageContent += `<li class="page-item"  ><a class="page-link ${i}"  onclick="changePage(${i})" style="display:none;">${i}</a></li>`;
+      }
+    }
+    if (Math.ceil(users.length / 5) > 5)
+      pageContent += `<li class="page-item"><a class="page-link" data-toggle="modal" data-target="#exampleModal3">...</a></li>`;
     $("#pageNumber").html(pageContent);
   });
 }
-
 
 checkPage();
 
 function loadDocJQuery(page) {
   $.ajax({
-    url:
-      `https://quan-ly-sinh-vien-techmaster.herokuapp.com/users?_page=${page}&_limit=5&_sort=id&_order=desc`,
+    url: `https://quan-ly-sinh-vien-techmaster.herokuapp.com/users?_page=${page}&_limit=5&_sort=id&_order=desc`,
     method: "GET",
   }).done(function (users) {
     let content = ``;
-
+    $(`a.page-link`).css("background-color", "white");
+    $(`a.page-link.${page}`).css("background-color", "rgba(0, 0, 0, 0.05)");
     for (let user of users) {
       content += `<tr>
                             <td><input onclick="showdiv()" type="checkbox" class="btn-check" id="btn-check ${user.id}" autocomplete="off">  </td>
@@ -76,16 +90,78 @@ function loadDocJQuery(page) {
   });
 }
 
-
 //   loadDoc();
 loadDocJQuery(1);
 
-
-// load specific Page
-function changePage(pageNumb) {
-  loadDocJQuery(pageNumb);
+// choose specific page
+function choosePage() {
+  if ($("#choosePageNumb").val() <= Math.ceil(totalUser / 5))
+    loadDocJQuery($("#choosePageNumb").val());
 }
 
+// change specific Page
+var currentPage = "1";
+function changePage(pageNumb) {
+  for (i = 0; i <= Math.ceil(totalUser / 5); i++) {
+    $(`.page-link.${i}`).css({
+      display: "none",
+      transition: "all 0.1s ease-in-out",
+    });
+  }
+
+  for (i = pageNumb - 2; i <= pageNumb + 2; i++) {
+    $(`.page-link.${i}`).css({
+      display: "block",
+      transition: "all 0.1s ease-in-out",
+    });
+  }
+
+  currentPage = pageNumb;
+  loadDocJQuery(currentPage);
+}
+
+//next page
+function nextPage() {
+  if (currentPage < Math.ceil(totalUser / 5)) {
+    currentPage++;
+
+    for (i = 0; i <= Math.ceil(totalUser / 5); i++) {
+      $(`.page-link.${i}`).css({
+        display: "none",
+        transition: "all 0.1s ease-in-out",
+      });
+    }
+
+    for (i = currentPage - 2; i <= currentPage + 2; i++) {
+      $(`.page-link.${i}`).css({
+        display: "block",
+        transition: "all 0.1s ease-in-out",
+      });
+    }
+  }
+  loadDocJQuery(currentPage);
+}
+
+//prev page
+function prevPage() {
+  if (currentPage > 1) {
+    currentPage--;
+    for (i = 0; i <= Math.ceil(totalUser / 5); i++) {
+      $(`.page-link.${i}`).css({
+        display: "none",
+        transition: "all 0.1s ease-in-out",
+      });
+    }
+
+    for (i = currentPage - 2; i <= currentPage + 2; i++) {
+      $(`.page-link.${i}`).css({
+        display: "block",
+        transition: "all 0.1s ease-in-out",
+      });
+    }
+  }
+  loadDocJQuery(currentPage);
+}
 //delete one user
 
 var saveDeleteUser;
@@ -98,8 +174,9 @@ function deleteUser(deleteUser) {
         "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users/" +
         deleteUser,
       type: "DELETE",
+    }).done(function () {
+      loadDocJQuery(1);
     });
-    loadDocJQuery(1);
   }
 }
 
@@ -119,10 +196,8 @@ function showdiv() {
   if ($("input:checkbox:checked").length == 0) $("#target").hide();
 }
 var checkedBox = [];
-function deleteMultiples() {
-  // var checkboxes = $('input:checkbox:checked').length;
-  // alert(checkboxes);
 
+function deleteMultiples() {
   $("input:checkbox").each(function () {
     var $this = $(this);
     var str = $this.attr("id");
@@ -142,10 +217,25 @@ function deleteMultipleUsers() {
         "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users/" +
         checkedBox[i],
       type: "DELETE",
+    }).done(function () {
+      loadDocJQuery(1);
+      $("#target").hide();
+      $(".check-all").prop(`checked`, false);
     });
   }
-  loadDocJQuery(1);
 }
+
+//check all
+$(".check-all").click(function () {
+  console.log($(".check-all").is(":checked"));
+  if ($(".check-all").is(":checked")) {
+    $("td input:checkbox").prop(`checked`, true);
+    $("#target").show();
+  } else {
+    $("td input:checkbox:checked").prop(`checked`, false);
+    $("#target").hide();
+  }
+});
 
 //js create page
 function createUser() {
