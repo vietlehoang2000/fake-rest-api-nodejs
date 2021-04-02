@@ -1,82 +1,90 @@
 //js index page
 
-function loadDoc() {
-  var xhttp = new XMLHttpRequest();
+// function loadDoc() {
+//   var xhttp = new XMLHttpRequest();
 
-  xhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-      const users = JSON.parse(this.responseText);
-      let content = ``;
+//   xhttp.onreadystatechange = function () {
+//     if (this.readyState == 4 && this.status == 200) {
+//       const users = JSON.parse(this.responseText);
+//       let content = ``;
 
-      for (let user of users) {
-        content += `<tr>
-                            <td>${user.name}</td>
-                            <td>${user.birthYear}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>`;
-      }
+//       for (let user of users) {
+//         content += `<tr>
+//                             <td>${user.name}</td>
+//                             <td>${user.birthYear}</td>
+//                             <td></td>
+//                             <td></td>
+//                             <td></td>
+//                         </tr>`;
+//       }
 
-      document.getElementById("content").innerHTML = content;
-    }
-  };
+//       document.getElementById("content").innerHTML = content;
+//     }
+//   };
 
-  xhttp.open(
-    "GET",
-    "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users",
-    true
-  );
+//   xhttp.open("GET", "http://localhost:3000/users", true);
 
-  xhttp.send();
-}
+//   xhttp.send();
+// }
 var totalUser = "";
+
+let headerToken = {
+  "Authorization" : "Bearer " + localStorage.getItem("fakeApiToken"),
+};
 
 function checkPage() {
   $.ajax({
     url: "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users",
     method: "GET",
-  }).done(function (users) {
-    totalUser = users.length;
-    $("input").on("input", function () {
-      var value = $("#choosePageNumb").val();
-      if (value !== "" && value.indexOf(".") === -1) {
-        $("#choosePageNumb").val(
-          Math.max(Math.min(value, Math.ceil(users.length / 5)), 1)
-        );
-      }
-    });
-    let pageContent = ``;
-    for (i = 1; i <= Math.ceil(users.length / 5); i++) {
-      if (i <= 5) {
-        if (i == 1) {
-          pageContent += `<li class="page-item"><a class="page-link ${i}"  onclick="changePage(${i})" style="background-color:rgba(0, 0, 0, 0.05)">${i}</a></li>`;
+    headers: headerToken,
+    success: (users) => {
+      totalUser = users.length;
+      $("input").on("input", function () {
+        var value = $("#choosePageNumb").val();
+        if (value !== "" && value.indexOf(".") === -1) {
+          $("#choosePageNumb").val(
+            Math.max(Math.min(value, Math.ceil(users.length / 5)), 1)
+          );
         }
-        if (i != 1)
-          pageContent += `<li class="page-item"><a class="page-link ${i}"  onclick="changePage(${i})">${i}</a></li>`;
+      });
+      let pageContent = ``;
+      for (i = 1; i <= Math.ceil(users.length / 5); i++) {
+        if (i <= 5) {
+          if (i == 1) {
+            pageContent += `<li class="page-item"><a class="page-link ${i}"  onclick="changePage(${i})" style="background-color:rgba(0, 0, 0, 0.05)">${i}</a></li>`;
+          }
+          if (i != 1)
+            pageContent += `<li class="page-item"><a class="page-link ${i}"  onclick="changePage(${i})">${i}</a></li>`;
+        }
+        if (i > 5) {
+          pageContent += `<li class="page-item"  ><a class="page-link ${i}"  onclick="changePage(${i})" style="display:none;">${i}</a></li>`;
+        }
       }
-      if (i > 5) {
-        pageContent += `<li class="page-item"  ><a class="page-link ${i}"  onclick="changePage(${i})" style="display:none;">${i}</a></li>`;
-      }
-    }
-    if (Math.ceil(users.length / 5) > 5)
-      pageContent += `<li class="page-item"><a class="page-link" data-toggle="modal" data-target="#exampleModal3">...</a></li>`;
-    $("#pageNumber").html(pageContent);
+      if (Math.ceil(users.length / 5) > 5)
+        pageContent += `<li class="page-item"><a class="page-link" data-toggle="modal" data-target="#exampleModal3">...</a></li>`;
+      $("#pageNumber").html(pageContent);
+    },
+    error: function () {
+      window.location.href = "login.html";
+    },
   });
+    
 }
 
 checkPage();
 
 function loadDocJQuery(page) {
+  console.log(headerToken);
   $.ajax({
     url: `https://quan-ly-sinh-vien-techmaster.herokuapp.com/users?_page=${page}&_limit=5&_sort=id&_order=desc`,
     method: "GET",
-  }).done(function (users) {
-    let content = ``;
-    $(`a.page-link`).css("background-color", "white");
-    $(`a.page-link.${page}`).css("background-color", "rgba(0, 0, 0, 0.05)");
-    for (let user of users) {
-      content += `<tr>
+    headers: headerToken,
+    success: function (users) {
+      let content = ``;
+      $(`a.page-link`).css("background-color", "white");
+      $(`a.page-link.${page}`).css("background-color", "rgba(0, 0, 0, 0.05)");
+      for (let user of users) {
+        content += `<tr>
                             <td><input onclick="showdiv()" type="checkbox" class="btn-check" id="btn-check ${user.id}" autocomplete="off">  </td>
                             <td> ${user.name}</td>
                             <td>${user.birthYear}</td>
@@ -84,9 +92,14 @@ function loadDocJQuery(page) {
                             <td>${user.phone}</td>
                             <td style="display:flex;justify-content:space-between"><button style="margin-right:5px; border:unset; background-color:unset;"><a href="edit.html?${user.id}" id="editUser" style="color: #01A4B6"><i class="far fa-edit"></i> chỉnh sửa</a></button> <div class="style1" style="border: 1px solid #8c8b8b;width:1px"></div> <button id="deleteUser"  data-toggle="modal" data-target="#exampleModal" onclick="deleteUser(${user.id})" style="margin-right:5px; border:unset; background-color:unset;color:red;"><i class="fas fa-trash-alt" style="margin-right:3px"></i>  Xóa</button></td>
                         </tr>`;
-    }
-    $("#content").html(content);
+      }
+      $("#content").html(content);
+    },
+    error: function () {
+      window.location.href = "login.html";
+    },
   });
+      
 }
 
 //   loadDoc();
@@ -170,19 +183,21 @@ function search() {
     $.ajax({
       url: `https://quan-ly-sinh-vien-techmaster.herokuapp.com/users?q=${searchValue}`,
       method: "GET",
-    }).done(function (users) {
-      let content = ``;
-      for (let user of users) {
-        content += `<tr>
+      headers: headerToken,
+      success: (users) => {
+        let content = ``;
+        for (let user of users) {
+          content += `<tr>
                             <td><input onclick="showdiv()" type="checkbox" class="btn-check" id="btn-check ${user.id}" autocomplete="off">  </td>
                             <td> ${user.name}</td>
-                            <td>${user.birthday}</td>
+                            <td>${user.birthYear}</td>
                             <td>${user.email}</td>
                             <td>${user.phone}</td>
                             <td style="display:flex;justify-content:space-between"><button style="margin-right:5px; border:unset; background-color:unset;"><a href="edit.html?${user.id}" id="editUser" style="color: #01A4B6"><i class="far fa-edit"></i> chỉnh sửa</a></button> <div class="style1" style="border: 1px solid #8c8b8b;width:1px"></div> <button id="deleteUser"  data-toggle="modal" data-target="#exampleModal" onclick="deleteUser(${user.id})" style="margin-right:5px; border:unset; background-color:unset;color:red;"><i class="fas fa-trash-alt" style="margin-right:3px"></i>  Xóa</button></td>
                         </tr>`;
-      }
-      $("#content").html(content);
+        }
+        $("#content").html(content);
+      },
     });
   }
 }
@@ -198,9 +213,14 @@ function deleteUser(deleteUser) {
       url:
         "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users/" +
         deleteUser,
-      type: "DELETE",
-    }).done(function () {
-      loadDocJQuery(1);
+      method: "DELETE",
+      headers: headerToken,
+      success: () => {
+        loadDocJQuery(1);
+      },
+      error: () => {
+        alert(`sai`);
+      },
     });
   }
 }
@@ -242,10 +262,12 @@ function deleteMultipleUsers() {
         "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users/" +
         checkedBox[i],
       type: "DELETE",
-    }).done(function () {
-      loadDocJQuery(1);
-      $("#target").hide();
-      $(".check-all").prop(`checked`, false);
+      headers: headerToken,
+      success: () => {
+        loadDocJQuery(1);
+        $("#target").hide();
+        $(".check-all").prop(`checked`, false);
+      },
     });
   }
 }
@@ -264,21 +286,18 @@ $(".check-all").click(function () {
 
 //js create page
 function createUser() {
-  $.post("https://quan-ly-sinh-vien-techmaster.herokuapp.com/users", {
-    name: $("#name").val(),
-    birthYear: $("#birthYear").val(),
-    email: $("#email").val(),
-    phone: $("#phone").val(),
-  })
 
-    .done(function () {
-      // location.href = "index.html";
-    })
-
-    .fail(function (err) {
-      console.log(err);
-      alert("khong ket noi duoc server");
-    });
+  $.ajax({
+    type: "POST",
+    url: "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users/",
+    headers: headerToken,
+    data: {
+      name: $("#name").val(),
+      birthYear: $("#birthYear").val(),
+      email: $("#email").val(),
+      phone: $("#phone").val(),
+    },
+  });
 }
 
 //return index
@@ -304,13 +323,16 @@ function loadUser() {
     url:
       "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users/" + sortedUrl,
     method: "GET",
-  }).done(function (users) {
-    $("#name").val(users.name);
-    $("#birthYear").val(users.birthday);
-    $("#email").val(users.email);
-    $("#phone").val(users.phone);
+    headers: headerToken,
+    success: (users) => {
+      $("#name").val(users.name);
+      $("#birthYear").val(users.birthday);
+      $("#email").val(users.email);
+      $("#phone").val(users.phone);
+    },
   });
 }
+
 loadUser();
 
 function updateUser() {
@@ -325,6 +347,7 @@ function updateUser() {
       "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users/" + sortedUrl,
     type: "PUT",
     data: data,
+    headers: headerToken,
     success: function (data) {},
   });
 }
