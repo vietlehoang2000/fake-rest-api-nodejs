@@ -659,6 +659,14 @@
       "email": "lkalderon2j@php.net",
       "phone": "798-421-7005",
       "birthYear": "17/1/2002"
+    },
+     {
+      "id": 93,
+      "name": "admin",
+      "email": "admin",
+      "password":"123",
+      "phone": "798-421-7005",
+      "birthYear": "17/1/2002"
     }
   ],
   "products": [
