@@ -29,8 +29,23 @@
 var totalUser = "";
 
 let headerToken = {
-  "Authorization" : "Bearer " + localStorage.getItem("fakeApiToken"),
+  Authorization: "Bearer " + localStorage.getItem("fakeApiToken"),
 };
+
+function loadUserName() {
+  $("#dropdownMenu2").html(`Xin chào ` + localStorage.getItem("username"));
+}
+loadUserName();
+
+$("#logout").click(function () {
+  localStorage.clear();
+  window.location.href = "login.html";
+});
+
+$("#editAcc").click(function () {
+  console.log("edit.html" + localStorage.getItem("id"));
+  window.location.href = "edit.html?" + localStorage.getItem("id");
+});
 
 function checkPage() {
   $.ajax({
@@ -68,7 +83,6 @@ function checkPage() {
       window.location.href = "login.html";
     },
   });
-    
 }
 
 checkPage();
@@ -99,7 +113,6 @@ function loadDocJQuery(page) {
       window.location.href = "login.html";
     },
   });
-      
 }
 
 //   loadDoc();
@@ -286,7 +299,6 @@ $(".check-all").click(function () {
 
 //js create page
 function createUser() {
-
   $.ajax({
     type: "POST",
     url: "https://quan-ly-sinh-vien-techmaster.herokuapp.com/users/",

@@ -25,14 +25,40 @@
   <body>
     <div class="container">
       <h1 class="text-center mt-4">Danh sách học viên</h1>
-      <div class="search-bar" style="margin-bottom:30px">
-        <div class="input-group">
-          <div class="form-outline">
-            <input type="search" id="searchForm" class="form-control" placeholder="Tìm kiếm"/>
+      <div
+        class="firstBanner"
+        style="display: flex; justify-content: space-between"
+      >
+        <div class="search-bar" style="margin-bottom: 30px">
+          <div class="input-group">
+            <div class="form-outline">
+              <input
+                type="search"
+                id="searchForm"
+                class="form-control"
+                placeholder="Tìm kiếm"
+              />
+            </div>
+            <button type="button" class="btn btn-primary" onclick="search()">
+              <i class="fas fa-search"></i>
+            </button>
           </div>
-          <button type="button" class="btn btn-primary" onclick="search()">
-            <i class="fas fa-search"></i>
+        </div>
+        <div class="dropdown">
+          <button
+            class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id="dropdownMenu2"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Xin chào
           </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+            <button class="dropdown-item" type="button" id="editAcc">Chỉnh sửa</button>
+            <button class="dropdown-item" type="button" id="logout">Đăng xuất</button>
+          </div>
         </div>
       </div>
       <p style="display: flex; justify-content: space-between">
